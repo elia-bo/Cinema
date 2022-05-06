@@ -9,6 +9,7 @@ namespace Cinema.Domain
         public int MaxNumSpettatori { get; set; }
         public List<Spettatore> Spettatori { get; set; } = new List<Spettatore>();
         public Film FilmInCorso { get; set; }
+        public int IdFilmInCorso { get; set; }
 
         public Sala(int maxNumSpettatori)
         {

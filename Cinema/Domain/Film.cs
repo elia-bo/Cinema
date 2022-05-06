@@ -10,6 +10,6 @@ namespace Cinema.Domain
         public string Produttore { get; set; }
         public GenereFilm Genere { get; set; }
         public TimeSpan Durata { get; set; }
-        public Sala Sala { get; set; }
+        public Sala Sala { get; set; } = default;
     }
 }

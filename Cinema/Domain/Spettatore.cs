@@ -8,10 +8,12 @@ namespace Cinema.Domain
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public DateTime DataNascita { get; set; }
-        public Biglietto Biglietto { get; set; }
+        public Biglietto Biglietto { get; set; } = default;
         public bool Maggiorenne { get; init; }
         public int Eta { get; set; }
-        public Sala Sala { get; set; }
+
+        public Sala Sala { get; set; } = default;
+        public int IdBiglietto { get; set; }
 
         public Spettatore(string nome, string cognome, DateTime dataNascita, Biglietto biglietto)
         {
@@ -22,6 +24,11 @@ namespace Cinema.Domain
             Maggiorenne = IsMaggiorenne(dataNascita);
             Eta = DateTime.Now.Year - dataNascita.Year;
             ScontaBiglietto(Biglietto);
+        }
+
+        public Spettatore()
+        {
+
         }
 
         private void ScontaBiglietto(Biglietto biglietto)

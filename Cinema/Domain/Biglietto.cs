@@ -6,6 +6,7 @@
         public char Fila { get; set; }
         public int Posto { get; set; }
         public double Prezzo { get; set; }
+        public Spettatore Spettatore { get; set; } = default;
 
         public Biglietto(char fila, int posto, double prezzo)
         {
