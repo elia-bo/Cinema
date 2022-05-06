@@ -6,9 +6,9 @@ namespace Cinema.DataBase.Data
     public class CinemaDbContext : DbContext
     {
         public DbSet<Biglietto> Biglietti { get; set; } = null;
-        public DbSet<Biglietto> Film { get; set; } = null;
-        public DbSet<Biglietto> Sale { get; set; } = null;
-        public DbSet<Biglietto> Spettatori { get; set; } = null;
+        public DbSet<Film> Film { get; set; } = null;
+        public DbSet<Sala> Sale { get; set; } = null;
+        public DbSet<Spettatore> Spettatori { get; set; } = null;
 
         public CinemaDbContext(DbContextOptions options) : base(options)
         {
