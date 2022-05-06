@@ -6,18 +6,19 @@
         public char Fila { get; set; }
         public int Posto { get; set; }
         public double Prezzo { get; set; }
-        public Spettatore Spettatore { get; set; } = default;
+        public int? IdSpettatore { get; set; } = default;
+        public Spettatore? Spettatore { get; set; } = default;
+        public int? IdFilm { get; set; } = default;
+        public Film? Film { get; set; } = default;
 
-        public Biglietto(char fila, int posto, double prezzo)
+        public Biglietto()
         {
-            Fila = fila;
-            Posto = posto;
-            Prezzo = prezzo;
+
         }
 
-        public void ApplicaSconto(double sconto)
+        public double ApplicaSconto(double sconto)
         {
-            Prezzo = Prezzo * (1 - (sconto / 100));
+            return Prezzo * (1 - (sconto / 100));
         }
     }
 }

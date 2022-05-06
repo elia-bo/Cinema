@@ -8,30 +8,23 @@ namespace Cinema.Domain
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public DateTime DataNascita { get; set; }
-        public Biglietto Biglietto { get; set; } = default;
-        public bool Maggiorenne { get; init; }
+        public Biglietto? Biglietto { get; set; } = default;
+        public bool Maggiorenne { get; set; }
         public int Eta { get; set; }
 
-        public Sala Sala { get; set; } = default;
-        public int IdBiglietto { get; set; }
-
-        public Spettatore(string nome, string cognome, DateTime dataNascita, Biglietto biglietto)
-        {
-            Nome = nome;
-            Cognome = cognome;
-            DataNascita = dataNascita;
-            Biglietto = biglietto;
-            Maggiorenne = IsMaggiorenne(dataNascita);
-            Eta = DateTime.Now.Year - dataNascita.Year;
-            ScontaBiglietto(Biglietto);
-        }
+        public Sala? Sala { get; set; } = default;
+        public int? IdBiglietto { get; set; } = default;
 
         public Spettatore()
         {
 
         }
 
-        private void ScontaBiglietto(Biglietto biglietto)
+        public int CalcolaEta(Spettatore spettatore)
+        {
+            return DateTime.Now.Year - spettatore.DataNascita.Year;
+        }
+        public Biglietto ScontaBiglietto(Biglietto biglietto)
         {
             if (Eta >= 70)
             {
@@ -39,10 +32,14 @@ namespace Cinema.Domain
             }
             if (Eta <= 5)
             {
-                Biglietto.ApplicaSconto(50);
+                biglietto.ApplicaSconto(50);
             }
+            return biglietto;
         }
 
-        private static bool IsMaggiorenne(DateTime dataNascita) => dataNascita.AddYears(18) > DateTime.Now;
+        public bool IsMaggiorenne(Spettatore spettatore)
+        {
+            return spettatore.DataNascita.AddYears(18) > DateTime.Now;
+        }
     }
 }

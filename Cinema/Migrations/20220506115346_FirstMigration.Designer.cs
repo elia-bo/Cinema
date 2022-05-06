@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20220506091347_SecondMigration")]
-    partial class SecondMigration
+    [Migration("20220506115346_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,12 @@ namespace Cinema.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
+                    b.Property<int?>("IdFilm")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdSpettatore")
+                        .HasColumnType("int");
+
                     b.Property<int>("Posto")
                         .HasColumnType("int");
 
@@ -39,6 +45,8 @@ namespace Cinema.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdFilm");
 
                     b.ToTable("Biglietti");
                 });
@@ -53,8 +61,8 @@ namespace Cinema.Migrations
                     b.Property<string>("Autore")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("Durata")
-                        .HasColumnType("time");
+                    b.Property<int>("Durata")
+                        .HasColumnType("int");
 
                     b.Property<int>("Genere")
                         .HasColumnType("int");
@@ -79,7 +87,7 @@ namespace Cinema.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("IdFilmInCorso")
+                    b.Property<int?>("IdFilmInCorso")
                         .HasColumnType("int");
 
                     b.Property<int>("MaxNumSpettatori")
@@ -88,7 +96,8 @@ namespace Cinema.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdFilmInCorso")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[IdFilmInCorso] IS NOT NULL");
 
                     b.ToTable("Sale");
                 });
@@ -106,12 +115,12 @@ namespace Cinema.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("DataNascita")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<int>("Eta")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdBiglietto")
+                    b.Property<int?>("IdBiglietto")
                         .HasColumnType("int");
 
                     b.Property<bool>("Maggiorenne")
@@ -128,20 +137,28 @@ namespace Cinema.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdBiglietto")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[IdBiglietto] IS NOT NULL");
 
                     b.HasIndex("SalaId");
 
                     b.ToTable("Spettatori");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Biglietto", b =>
+                {
+                    b.HasOne("Cinema.Domain.Film", "Film")
+                        .WithMany("Biglietti")
+                        .HasForeignKey("IdFilm");
+
+                    b.Navigation("Film");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Sala", b =>
                 {
                     b.HasOne("Cinema.Domain.Film", "FilmInCorso")
                         .WithOne("Sala")
-                        .HasForeignKey("Cinema.Domain.Sala", "IdFilmInCorso")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Cinema.Domain.Sala", "IdFilmInCorso");
 
                     b.Navigation("FilmInCorso");
                 });
@@ -150,9 +167,7 @@ namespace Cinema.Migrations
                 {
                     b.HasOne("Cinema.Domain.Biglietto", "Biglietto")
                         .WithOne("Spettatore")
-                        .HasForeignKey("Cinema.Domain.Spettatore", "IdBiglietto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Cinema.Domain.Spettatore", "IdBiglietto");
 
                     b.HasOne("Cinema.Domain.Sala", "Sala")
                         .WithMany("Spettatori")
@@ -170,6 +185,8 @@ namespace Cinema.Migrations
 
             modelBuilder.Entity("Cinema.Domain.Film", b =>
                 {
+                    b.Navigation("Biglietti");
+
                     b.Navigation("Sala");
                 });
 

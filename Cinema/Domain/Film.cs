@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Cinema.Domain
 {
@@ -9,7 +9,13 @@ namespace Cinema.Domain
         public string Autore { get; set; }
         public string Produttore { get; set; }
         public GenereFilm Genere { get; set; }
-        public TimeSpan Durata { get; set; }
-        public Sala Sala { get; set; } = default;
+        public int Durata { get; set; }
+        public Sala? Sala { get; set; } = default;
+        public List<Biglietto>? Biglietti { get; set; } = default;
+
+        public Film()
+        {
+
+        }
     }
 }

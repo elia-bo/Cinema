@@ -8,21 +8,6 @@ namespace Cinema.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Biglietto",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fila = table.Column<string>(type: "nvarchar(1)", nullable: false),
-                    Posto = table.Column<int>(type: "int", nullable: false),
-                    Prezzo = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Biglietto", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Film",
                 columns: table => new
                 {
@@ -32,7 +17,7 @@ namespace Cinema.Migrations
                     Autore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Produttore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genere = table.Column<int>(type: "int", nullable: false),
-                    Durata = table.Column<TimeSpan>(type: "time", nullable: false)
+                    Durata = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,84 +25,114 @@ namespace Cinema.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sala",
+                name: "Biglietti",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fila = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    Posto = table.Column<int>(type: "int", nullable: false),
+                    Prezzo = table.Column<double>(type: "float", nullable: false),
+                    IdSpettatore = table.Column<int>(type: "int", nullable: true),
+                    IdFilm = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Biglietti", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Biglietti_Film_IdFilm",
+                        column: x => x.IdFilm,
+                        principalTable: "Film",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sale",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MaxNumSpettatori = table.Column<int>(type: "int", nullable: false),
-                    IdFilmInCorso = table.Column<int>(type: "int", nullable: false)
+                    IdFilmInCorso = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sala", x => x.Id);
+                    table.PrimaryKey("PK_Sale", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sala_Film_IdFilmInCorso",
+                        name: "FK_Sale_Film_IdFilmInCorso",
                         column: x => x.IdFilmInCorso,
                         principalTable: "Film",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Spettatore",
+                name: "Spettatori",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Cognome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DataNascita = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataNascita = table.Column<DateTime>(type: "date", nullable: false),
                     Maggiorenne = table.Column<bool>(type: "bit", nullable: false),
                     Eta = table.Column<int>(type: "int", nullable: false),
                     SalaId = table.Column<int>(type: "int", nullable: true),
-                    IdBiglietto = table.Column<int>(type: "int", nullable: false)
+                    IdBiglietto = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Spettatore", x => x.Id);
+                    table.PrimaryKey("PK_Spettatori", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Spettatore_Biglietto_IdBiglietto",
+                        name: "FK_Spettatori_Biglietti_IdBiglietto",
                         column: x => x.IdBiglietto,
-                        principalTable: "Biglietto",
+                        principalTable: "Biglietti",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Spettatore_Sala_SalaId",
+                        name: "FK_Spettatori_Sale_SalaId",
                         column: x => x.SalaId,
-                        principalTable: "Sala",
+                        principalTable: "Sale",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sala_IdFilmInCorso",
-                table: "Sala",
+                name: "IX_Biglietti_IdFilm",
+                table: "Biglietti",
+                column: "IdFilm");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sale_IdFilmInCorso",
+                table: "Sale",
                 column: "IdFilmInCorso",
-                unique: true);
+                unique: true,
+                filter: "[IdFilmInCorso] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Spettatore_IdBiglietto",
-                table: "Spettatore",
+                name: "IX_Spettatori_IdBiglietto",
+                table: "Spettatori",
                 column: "IdBiglietto",
-                unique: true);
+                unique: true,
+                filter: "[IdBiglietto] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Spettatore_SalaId",
-                table: "Spettatore",
+                name: "IX_Spettatori_SalaId",
+                table: "Spettatori",
                 column: "SalaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Spettatore");
+                name: "Spettatori");
 
             migrationBuilder.DropTable(
-                name: "Biglietto");
+                name: "Biglietti");
 
             migrationBuilder.DropTable(
-                name: "Sala");
+                name: "Sale");
 
             migrationBuilder.DropTable(
                 name: "Film");

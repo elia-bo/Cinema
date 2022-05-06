@@ -2,12 +2,12 @@
 
 namespace Cinema.Domain
 {
-    public class Cinema
+    public class CinemaEnaip
     {
         public int Id { get; set; }
         public List<Sala> Sale { get; set; } = new List<Sala>();
 
-        public Cinema()
+        public CinemaEnaip()
         {
 
         }

@@ -7,16 +7,20 @@ namespace Cinema.Domain
     {
         public int Id { get; set; }
         public int MaxNumSpettatori { get; set; }
-        public List<Spettatore> Spettatori { get; set; } = new List<Spettatore>();
-        public Film FilmInCorso { get; set; }
-        public int IdFilmInCorso { get; set; }
+        public List<Spettatore>? Spettatori { get; set; } = new List<Spettatore>();
+        public Film? FilmInCorso { get; set; } = default;
+        public int? IdFilmInCorso { get; set; } = default;
 
-        public Sala(int maxNumSpettatori)
+        public Sala()
         {
-            MaxNumSpettatori = maxNumSpettatori;
+
         }
 
-        public void SvuotaSala() => Spettatori.Clear();
+        public Sala SvuotaSala(Sala sala)
+        {
+            sala.Spettatori.Clear();
+            return sala;
+        }
 
         public void AggiungiSpettatore(Spettatore spettatore)
         {
