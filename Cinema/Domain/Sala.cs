@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Cinema.Domain
 {
@@ -17,27 +16,7 @@ namespace Cinema.Domain
 
         }
 
-        public Sala SvuotaSala(Sala sala)
-        {
-            sala.Spettatori.Clear();
-            return sala;
-        }
 
-        public void AggiungiSpettatore(Spettatore spettatore)
-        {
-            if (Spettatori.Count == MaxNumSpettatori)
-            {
-                throw new Exception("SalaAlCompleto");
-            }
-            if (spettatore.Eta < 14 && FilmInCorso.Genere == GenereFilm.Horror)
-            {
-                throw new Exception("FilmVietato");
-            }
-            else
-            {
-                Spettatori.Add(spettatore);
-            }
-        }
 
         public double CalcolaIncassoSala()
         {

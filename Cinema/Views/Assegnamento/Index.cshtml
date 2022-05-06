@@ -8,6 +8,20 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+    <form asp-action="SvuotaSala" asp-controller="Assegnamento">
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class ="form-control" name="IdSala">
+                    @foreach (var item in Model)
+                {
+                    <option value="@item.IdSala">@item.IdSala</option>
+                }
+                </select>
+            </div>
+            <div class="col-md-3 my-auto">
+                <button type="submit" class="btn btn-primary">Svuota Sala</button>
+            </div>
+    </form>
 </p>
 <table class="table">
     <thead>

@@ -138,6 +138,12 @@ namespace Cinema.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        public async Task<IActionResult> CalcolaIncassoSala(int id)
+        {
+            var sala = await _context.Sale.FindAsync(id);
+        }
+
         private bool SalaExists(int id)
         {
             return _context.Sale.Any(e => e.Id == id);

@@ -144,6 +144,18 @@ namespace Cinema.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> SvuotaSala(int id)
+        {
+            var assegnamenti = await _context.Assegnamento.Include(a => a.Sala).Include(a => a.Spettatore).ToListAsync();
+            var sale = assegnamenti.Where(a => a.IdSala == id);
+            foreach (var item in sale)
+            {
+                _context.Assegnamento.Remove(item);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool AssegnamentoExists(int id)
         {
             return _context.Assegnamento.Any(e => e.Id == id);
