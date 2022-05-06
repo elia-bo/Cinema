@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Cinema.Domain
 {
@@ -14,6 +15,7 @@ namespace Cinema.Domain
 
         public Sala? Sala { get; set; } = default;
         public int? IdBiglietto { get; set; } = default;
+        public List<Assegnamento>? Assegnamenti { get; set; } = default;
 
         public Spettatore()
         {

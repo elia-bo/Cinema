@@ -10,6 +10,7 @@ namespace Cinema.Domain
         public List<Spettatore>? Spettatori { get; set; } = new List<Spettatore>();
         public Film? FilmInCorso { get; set; } = default;
         public int? IdFilmInCorso { get; set; } = default;
+        public List<Assegnamento>? Assegnamenti { get; set; } = default;
 
         public Sala()
         {

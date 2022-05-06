@@ -148,6 +148,23 @@ namespace Cinema.DataBase.Data
                     Maggiorenne = true
                 }
             });
+
+            var assegnamento = modelBuilder.Entity<Assegnamento>();
+            assegnamento.HasKey(a => a.Id);
+            assegnamento.Property(a => a.IdSpettatore).IsRequired();
+            assegnamento.Property(a => a.IdSala).IsRequired();
+
+            assegnamento
+                .HasOne(a => a.Sala)
+                .WithMany(s => s.Assegnamenti)
+                .HasForeignKey(a => a.IdSala);
+
+            assegnamento
+                .HasOne(a => a.Spettatore)
+                .WithMany(s => s.Assegnamenti)
+                .HasForeignKey(a => a.IdSpettatore);
         }
+
+        public DbSet<Cinema.Domain.Assegnamento> Assegnamento { get; set; }
     }
 }

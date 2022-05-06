@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cinema.DataBase.Data;
+using Cinema.Domain;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Cinema.DataBase.Data;
-using Cinema.Domain;
 
 namespace Cinema.Controllers
 {
@@ -19,13 +16,11 @@ namespace Cinema.Controllers
             _context = context;
         }
 
-        // GET: Biglietto
         public async Task<IActionResult> Index()
         {
             return View(await _context.Biglietti.ToListAsync());
         }
 
-        // GET: Biglietto/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,15 +38,11 @@ namespace Cinema.Controllers
             return View(biglietto);
         }
 
-        // GET: Biglietto/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Biglietto/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Fila,Posto,Prezzo")] Biglietto biglietto)
@@ -65,7 +56,6 @@ namespace Cinema.Controllers
             return View(biglietto);
         }
 
-        // GET: Biglietto/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,9 +71,6 @@ namespace Cinema.Controllers
             return View(biglietto);
         }
 
-        // POST: Biglietto/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Fila,Posto,Prezzo")] Biglietto biglietto)
@@ -116,7 +103,6 @@ namespace Cinema.Controllers
             return View(biglietto);
         }
 
-        // GET: Biglietto/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,7 +120,6 @@ namespace Cinema.Controllers
             return View(biglietto);
         }
 
-        // POST: Biglietto/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

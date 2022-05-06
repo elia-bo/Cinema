@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Cinema.Controllers
 {
-    public class SpettatoreController : Controller
+    public class AssegnamentoController : Controller
     {
         private readonly CinemaDbContext _context;
 
-        public SpettatoreController(CinemaDbContext context)
+        public AssegnamentoController(CinemaDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var cinemaDbContext = _context.Spettatori.Include(s => s.Biglietto);
+            var cinemaDbContext = _context.Assegnamento.Include(a => a.Sala).Include(a => a.Spettatore);
             return View(await cinemaDbContext.ToListAsync());
         }
 
@@ -30,37 +30,38 @@ namespace Cinema.Controllers
                 return NotFound();
             }
 
-            var spettatore = await _context.Spettatori
-                .Include(s => s.Biglietto)
+            var assegnamento = await _context.Assegnamento
+                .Include(a => a.Sala)
+                .Include(a => a.Spettatore)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spettatore == null)
+            if (assegnamento == null)
             {
                 return NotFound();
             }
 
-            return View(spettatore);
+            return View(assegnamento);
         }
 
         public IActionResult Create()
         {
-            ViewData["IdBiglietto"] = new SelectList(_context.Biglietti, "Id", "Id");
+            ViewData["IdSala"] = new SelectList(_context.Sale, "Id", "Id");
+            ViewData["IdSpettatore"] = new SelectList(_context.Spettatori, "Id", "Cognome");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Cognome,DataNascita,IdBiglietto")] Spettatore spettatore)
+        public async Task<IActionResult> Create([Bind("Id,IdSala,IdSpettatore")] Assegnamento assegnamento)
         {
-            spettatore.Eta = spettatore.CalcolaEta(spettatore);
-            spettatore.Maggiorenne = spettatore.IsMaggiorenne(spettatore);
             if (ModelState.IsValid)
             {
-                _context.Add(spettatore);
+                _context.Add(assegnamento);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdBiglietto"] = new SelectList(_context.Biglietti, "Id", "Id", spettatore.IdBiglietto);
-            return View(spettatore);
+            ViewData["IdSala"] = new SelectList(_context.Sale, "Id", "Id", assegnamento.IdSala);
+            ViewData["IdSpettatore"] = new SelectList(_context.Spettatori, "Id", "Cognome", assegnamento.IdSpettatore);
+            return View(assegnamento);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -70,20 +71,21 @@ namespace Cinema.Controllers
                 return NotFound();
             }
 
-            var spettatore = await _context.Spettatori.FindAsync(id);
-            if (spettatore == null)
+            var assegnamento = await _context.Assegnamento.FindAsync(id);
+            if (assegnamento == null)
             {
                 return NotFound();
             }
-            ViewData["IdBiglietto"] = new SelectList(_context.Biglietti, "Id", "Id", spettatore.IdBiglietto);
-            return View(spettatore);
+            ViewData["IdSala"] = new SelectList(_context.Sale, "Id", "Id", assegnamento.IdSala);
+            ViewData["IdSpettatore"] = new SelectList(_context.Spettatori, "Id", "Cognome", assegnamento.IdSpettatore);
+            return View(assegnamento);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Cognome,DataNascita,Maggiorenne,Eta,IdBiglietto")] Spettatore spettatore)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdSala,IdSpettatore")] Assegnamento assegnamento)
         {
-            if (id != spettatore.Id)
+            if (id != assegnamento.Id)
             {
                 return NotFound();
             }
@@ -92,12 +94,12 @@ namespace Cinema.Controllers
             {
                 try
                 {
-                    _context.Update(spettatore);
+                    _context.Update(assegnamento);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpettatoreExists(spettatore.Id))
+                    if (!AssegnamentoExists(assegnamento.Id))
                     {
                         return NotFound();
                     }
@@ -108,8 +110,9 @@ namespace Cinema.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdBiglietto"] = new SelectList(_context.Biglietti, "Id", "Id", spettatore.IdBiglietto);
-            return View(spettatore);
+            ViewData["IdSala"] = new SelectList(_context.Sale, "Id", "Id", assegnamento.IdSala);
+            ViewData["IdSpettatore"] = new SelectList(_context.Spettatori, "Id", "Cognome", assegnamento.IdSpettatore);
+            return View(assegnamento);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -119,30 +122,31 @@ namespace Cinema.Controllers
                 return NotFound();
             }
 
-            var spettatore = await _context.Spettatori
-                .Include(s => s.Biglietto)
+            var assegnamento = await _context.Assegnamento
+                .Include(a => a.Sala)
+                .Include(a => a.Spettatore)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spettatore == null)
+            if (assegnamento == null)
             {
                 return NotFound();
             }
 
-            return View(spettatore);
+            return View(assegnamento);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var spettatore = await _context.Spettatori.FindAsync(id);
-            _context.Spettatori.Remove(spettatore);
+            var assegnamento = await _context.Assegnamento.FindAsync(id);
+            _context.Assegnamento.Remove(assegnamento);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SpettatoreExists(int id)
+        private bool AssegnamentoExists(int id)
         {
-            return _context.Spettatori.Any(e => e.Id == id);
+            return _context.Assegnamento.Any(e => e.Id == id);
         }
     }
 }
