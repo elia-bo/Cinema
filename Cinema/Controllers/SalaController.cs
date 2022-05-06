@@ -142,6 +142,8 @@ namespace Cinema.Controllers
         public async Task<IActionResult> CalcolaIncassoSala(int id)
         {
             var sala = await _context.Sale.FindAsync(id);
+            var incasso = sala.CalcolaIncassoSala();
+            return View(incasso);
         }
 
         private bool SalaExists(int id)
